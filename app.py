@@ -3,7 +3,7 @@ import time
 
 st.set_page_config(
     page_title="Diva Turns 22 🕯️",
-    page_icon="💸",
+    page_icon="🥂",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -18,7 +18,6 @@ st.markdown("""
         background: linear-gradient(180deg, #1a0f0a 0%, #2d1b12 50%, #1a0f0a 100%);
     }
     
-    /* Golden particles */
     .gold-dust {
         position: fixed;
         width: 3px;
@@ -37,7 +36,6 @@ st.markdown("""
         100% { transform: translateY(-10vh); opacity: 0; }
     }
     
-    /* Main Title - Elegant Script */
     .diva-title {
         font-family: 'Great Vibes', cursive;
         font-size: 4.5rem;
@@ -58,7 +56,6 @@ st.markdown("""
         font-style: italic;
     }
     
-    /* Candlelit Cake Scene */
     .cake-scene {
         width: 320px;
         height: 380px;
@@ -68,7 +65,6 @@ st.markdown("""
         border-radius: 50%;
     }
     
-    /* Elegant Cake - Cream/Ivory */
     .cake-layer {
         position: absolute;
         left: 50%;
@@ -101,7 +97,6 @@ st.markdown("""
         border: 1px solid #d4af37;
     }
     
-    /* Frosting */
     .frosting {
         position: absolute;
         top: -5px;
@@ -113,7 +108,6 @@ st.markdown("""
         opacity: 0.9;
     }
     
-    /* Multiple Candles */
     .candle-group {
         position: absolute;
         bottom: 230px;
@@ -149,7 +143,6 @@ st.markdown("""
         100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
     }
     
-    /* Age */
     .age-number {
         position: absolute;
         bottom: 120px;
@@ -161,7 +154,6 @@ st.markdown("""
         text-shadow: 0 0 20px rgba(212,175,55,0.8);
     }
     
-    /* Message Cards - Dark Elegant */
     .message-card {
         background: rgba(30,20,15,0.8);
         border: 1px solid #d4af37;
@@ -181,7 +173,6 @@ st.markdown("""
         text-align: center;
     }
     
-    /* Buttons */
     .stButton > button {
         background: linear-gradient(135deg, #d4af37, #b8956a) !important;
         color: #1a0f0a !important;
@@ -195,7 +186,6 @@ st.markdown("""
         box-shadow: 0 5px 20px rgba(212,175,55,0.3) !important;
     }
     
-    /* Secret Vault - Same colors */
     .vault-box {
         background: rgba(20,15,10,0.9);
         border: 2px solid #d4af37;
@@ -223,7 +213,6 @@ st.markdown("""
         font-size: 1.1rem !important;
     }
     
-    /* Lizard Gift Box */
     .gift-scene {
         background: rgba(40,30,20,0.8);
         border: 2px dashed #d4af37;
@@ -243,9 +232,26 @@ st.markdown("""
         0%, 100% { transform: translateX(-10px) rotate(-5deg); }
         50% { transform: translateX(10px) rotate(5deg); }
     }
+    
+    .petal {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, #ffd700, #d4af37);
+        border-radius: 50% 0 50% 0;
+        pointer-events: none;
+        animation: fall 8s linear infinite;
+        opacity: 0;
+    }
+    
+    @keyframes fall {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+        10% { opacity: 0.8; }
+        90% { opacity: 0.8; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
 </style>
 
-<!-- Golden Dust Particles -->
 <div class="gold-dust" style="left: 15%; animation-delay: 0s;"></div>
 <div class="gold-dust" style="left: 35%; animation-delay: 2s;"></div>
 <div class="gold-dust" style="left: 55%; animation-delay: 4s;"></div>
@@ -253,11 +259,9 @@ st.markdown("""
 <div class="gold-dust" style="left: 90%; animation-delay: 3s;"></div>
 """, unsafe_allow_html=True)
 
-# Title
 st.markdown('<h1 class="diva-title">Diva Turns 22</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">✨ Sanah • The Original Diva • Est. 2004 ✨</p>', unsafe_allow_html=True)
 
-# Cake Scene
 st.markdown("""
 <div class="cake-scene">
     <div class="cake-layer layer-bottom">
@@ -282,7 +286,6 @@ st.markdown("""
 
 st.markdown("---")
 
-# About Sanah Section
 st.markdown('<h2 style="text-align: center; font-family: Great Vibes; color: #ffd700; font-size: 2.5rem;">About The Diva</h2>', unsafe_allow_html=True)
 
 st.markdown("""
@@ -290,46 +293,42 @@ st.markdown("""
     <h3 class="card-title">👑 Sanah 101</h3>
     <p style="font-size: 1.1rem; line-height: 1.8;">
         Name: <b>Sanah</b> (not Sana, not Sanaa, not "hey you")<br>
-        Age: <b>22</b> (finally legal to... rent a car without extra fees)<br>
+        Age: <b>22</b> (finally ready to... 💍😅🏳️)<br>
         Occupation: <b>Future Lawyer</b> (currently professional overthinker)<br>
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-# Comedy Buttons
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("🦎 The Lizard Story"):
+    if st.button("💎 Why You're My Close Friend"):
         st.markdown("""
         <div class="message-card">
-            <h3 class="card-title">The Legend of Sanah & The Lizard</h3>
+            <h3 class="card-title">The Language of Us</h3>
             <p style="font-size: 1.1rem; line-height: 1.8;">
-                Our diva once found a lizard in her room and screamed so loud 
-                that the neighbors thought someone was being murdered. 
+                Because you let me be free. You answer me whenever, never pressure me, 
+                and never judge. Our talks, the gossip, the laughter we share in that chat— 
+                honestly, it's the best part of my day. 
                 <br><br>
-                She then stood on a chair for 3 hours waiting for "someone brave" 
-                (aka anyone else) to remove it. 
+                And I want to thank the company that manufactured you— 
+                I mean, Mama and Papa. They really outdid themselves with this masterpiece. 
                 <br><br>
-                <b>The lizard now pays rent and lives there permanently.</b> 
-                They've reached an understanding. 🦎☕
+                <b>You're the definition of rare.</b> 💎
             </p>
         </div>
         """, unsafe_allow_html=True)
 
 with col2:
-    if st.button("⚖️ Law School Diaries"):
+    if st.button("☕ Law School Survival"):
         st.markdown("""
         <div class="message-card">
-            <h3 class="card-title">Exhibit A: Sanah in Court</h3>
+            <h3 class="card-title">Caffeine & Chaos</h3>
             <p style="font-size: 1.1rem; line-height: 1.8;">
-                Survives 4 hours of Contracts lecture, 
-                memorizes 50 case names, 
-                argues about everything... 
+                Surviving on espresso and sheer willpower. 
+                We don't memorize cases, we download them directly into our souls at 3 AM. 
                 <br><br>
-                ...but still can't decide what to order for dinner. 
-                <br><br>
-                <b>Objection: Her Honor is hungry.</b> ⚖️🍕
+                <b>Is this legal? Absolutely not. Do we care? Also no.</b> ☕⚖️
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -352,17 +351,17 @@ with col3:
         """, unsafe_allow_html=True)
 
 with col4:
-    if st.button("🎁 Special Delivery"):
+    if st.button("🎁 Special Gift From Zeinah"):
         st.markdown("""
         <div class="gift-scene">
-            <h3 style="font-family: Great Vibes; color: #ffd700; font-size: 1.8rem;">Your Gift Has Arrived</h3>
+            <h3 style="font-family: Great Vibes; color: #ffd700; font-size: 1.8rem;">A Gift From Me To You</h3>
             <br>
             <span class="lizard-emoji">🦎</span>
             <br><br>
             <p style="color: #f4e4c1; font-size: 1.1rem;">
-                <b>A lizard.</b><br>
-                Because every diva needs an emotional support reptile.<br>
-                <i>(He's trained in legal research and emotional damage)</i>
+                <b>Your very own emotional support lizard.</b><br>
+                Because every diva needs a reptile that matches her energy—<br>
+                <i>cold-blooded but loyal, and slightly terrifying to men.</i>
             </p>
             <br>
             <p style="color: #d4af37; font-size: 0.9rem;">
@@ -372,8 +371,43 @@ with col4:
         """, unsafe_allow_html=True)
 
 st.markdown("---")
+st.markdown('<h2 style="text-align: center; font-family: Great Vibes; color: #ffd700; font-size: 2.5rem;">The Manifest</h2>', unsafe_allow_html=True)
 
-# Secret Vault
+if st.button("✨ Read The Manifest ✨", use_container_width=True):
+    st.markdown("""
+    <div class="petal" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="petal" style="left: 30%; animation-delay: 1s;"></div>
+    <div class="petal" style="left: 50%; animation-delay: 2s;"></div>
+    <div class="petal" style="left: 70%; animation-delay: 0.5s;"></div>
+    <div class="petal" style="left: 90%; animation-delay: 1.5s;"></div>
+    """, unsafe_allow_html=True)
+    
+    time.sleep(0.5)
+    
+    st.markdown("""
+    <div class="message-card" style="border-width: 2px; box-shadow: 0 0 50px rgba(212,175,55,0.3);">
+        <h3 class="card-title">For The Year Ahead</h3>
+        <p style="font-size: 1.2rem; line-height: 2; font-style: italic;">
+            Dear Universe, we're putting in our order early:<br><br>
+            
+            A man so pure he makes holy water look suspicious.<br>
+            Religious, respectful, and rich in both character and bank account.<br>
+            Muscles? Yes. Charisma? Absolutely.<br>
+            Cadillac in the driveway, villa with a view, private jet for spontaneous trips.<br><br>
+            
+            He should love obsessively, never cheat, and look at her<br>
+            like she invented oxygen.<br>
+            Basically: if he doesn't worship the ground she walks on,<br>
+            he can keep walking. <b>Period.</b><br><br>
+            
+            P.S. He must also pass the lizard inspection.<br>
+            If the lizard doesn't approve, we don't approve. 🦎👑
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("---")
+
 st.markdown("""
 <div class="vault-box">
     <h2 class="vault-title">🔐 The Secret Vault</h2>
@@ -407,9 +441,13 @@ if password:
         </div>
         """, unsafe_allow_html=True)
         
-        st.balloons()
-        time.sleep(0.5)
-        st.snow()
+        st.markdown("""
+        <div class="petal" style="left: 15%; animation-delay: 0s;"></div>
+        <div class="petal" style="left: 35%; animation-delay: 0.5s;"></div>
+        <div class="petal" style="left: 55%; animation-delay: 1s;"></div>
+        <div class="petal" style="left: 75%; animation-delay: 1.5s;"></div>
+        <div class="petal" style="left: 90%; animation-delay: 2s;"></div>
+        """, unsafe_allow_html=True)
         
     else:
         st.error("❌ Wrong code. The lizard is disappointed in you.")
