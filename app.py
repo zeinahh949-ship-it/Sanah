@@ -8,6 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# CSS كامل
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&family=Great+Vibes&display=swap');
@@ -123,6 +124,7 @@ st.markdown("""
         background: linear-gradient(90deg, #f4e4c1, #fff, #f4e4c1);
         border-radius: 2px;
         position: relative;
+        transition: all 0.5s;
     }
     
     .flame {
@@ -136,11 +138,38 @@ st.markdown("""
         border-radius: 50% 50% 30% 30%;
         animation: flicker 0.4s infinite alternate;
         box-shadow: 0 0 10px rgba(255,215,0,0.8);
+        transition: opacity 0.5s;
     }
     
     @keyframes flicker {
         0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
         100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
+    }
+    
+    .candle.out {
+        background: linear-gradient(90deg, #555, #777, #555);
+    }
+    
+    .candle.out .flame {
+        opacity: 0;
+        animation: none;
+    }
+    
+    .smoke {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 20px;
+        background: linear-gradient(to top, rgba(200,200,200,0.5), transparent);
+        border-radius: 50%;
+        animation: smoke-rise 2s ease-out forwards;
+    }
+    
+    @keyframes smoke-rise {
+        0% { opacity: 0.8; transform: translateX(-50%) translateY(0) scale(1); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(-30px) scale(2); }
     }
     
     .age-number {
@@ -233,22 +262,57 @@ st.markdown("""
         50% { transform: translateX(10px) rotate(5deg); }
     }
     
-    .petal {
+    .star {
         position: fixed;
-        width: 10px;
-        height: 10px;
-        background: radial-gradient(circle, #ffd700, #d4af37);
-        border-radius: 50% 0 50% 0;
+        width: 4px;
+        height: 4px;
+        background: #ffd700;
+        border-radius: 50%;
         pointer-events: none;
-        animation: fall 8s linear infinite;
-        opacity: 0;
+        animation: star-fall 3s linear infinite;
+        box-shadow: 0 0 10px #ffd700;
     }
     
-    @keyframes fall {
-        0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
-        10% { opacity: 0.8; }
-        90% { opacity: 0.8; }
+    @keyframes star-fall {
+        0% { transform: translateY(-10vh) translateX(0); opacity: 1; }
+        100% { transform: translateY(100vh) translateX(50px); opacity: 0; }
+    }
+    
+    .falling-lizard {
+        position: fixed;
+        font-size: 2rem;
+        pointer-events: none;
+        animation: lizard-fall 4s linear infinite;
+        z-index: 1000;
+    }
+    
+    @keyframes lizard-fall {
+        0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
         100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+    
+    .vault-image {
+        border-radius: 15px;
+        border: 2px solid #ffd700;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        max-width: 100%;
+    }
+    
+    .image-container {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 2rem 0;
+    }
+    
+    .countdown-text {
+        font-family: 'Great Vibes', cursive;
+        font-size: 2rem;
+        color: #ffd700;
+        text-align: center;
+        margin: 1rem 0;
     }
 </style>
 
@@ -259,10 +323,31 @@ st.markdown("""
 <div class="gold-dust" style="left: 90%; animation-delay: 3s;"></div>
 """, unsafe_allow_html=True)
 
+# Countdown for candles
+if 'candles_lit' not in st.session_state:
+    st.session_state.candles_lit = True
+
+if st.session_state.candles_lit:
+    st.markdown('<p class="countdown-text">🕯️ Blowing the candles...</p>', unsafe_allow_html=True)
+    
+    # Countdown 3, 2, 1
+    countdown_placeholder = st.empty()
+    for i in range(3, 0, -1):
+        countdown_placeholder.markdown(f'<h1 style="text-align: center; font-size: 4rem; color: #ffd700; font-family: Great Vibes;">{i}</h1>', unsafe_allow_html=True)
+        time.sleep(1)
+    
+    countdown_placeholder.empty()
+    st.session_state.candles_lit = False
+    st.rerun()
+
 st.markdown('<h1 class="diva-title">Diva Turns 22</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">✨ Sanah • The Original Diva • Est. 2004 ✨</p>', unsafe_allow_html=True)
 
-st.markdown("""
+# Cake with candles out if countdown finished
+candle_class = "candle" if st.session_state.candles_lit else "candle out"
+flame_html = '<div class="flame"></div>' if st.session_state.candles_lit else '<div class="smoke"></div>'
+
+st.markdown(f"""
 <div class="cake-scene">
     <div class="cake-layer layer-bottom">
         <div class="frosting"></div>
@@ -275,11 +360,11 @@ st.markdown("""
     </div>
     <div class="age-number">22</div>
     <div class="candle-group">
-        <div class="candle"><div class="flame"></div></div>
-        <div class="candle"><div class="flame"></div></div>
-        <div class="candle"><div class="flame"></div></div>
-        <div class="candle"><div class="flame"></div></div>
-        <div class="candle"><div class="flame"></div></div>
+        <div class="{candle_class}">{flame_html}</div>
+        <div class="{candle_class}">{flame_html}</div>
+        <div class="{candle_class}">{flame_html}</div>
+        <div class="{candle_class}">{flame_html}</div>
+        <div class="{candle_class}">{flame_html}</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -302,25 +387,77 @@ st.markdown("""
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("💎 Why You're My Close Friend"):
+    if st.button("💎 Why You're My Unbiological Sister"):
+        # Star rain
+        st.markdown("""
+        <div class="star" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="star" style="left: 30%; animation-delay: 0.5s;"></div>
+        <div class="star" style="left: 50%; animation-delay: 1s;"></div>
+        <div class="star" style="left: 70%; animation-delay: 1.5s;"></div>
+        <div class="star" style="left: 90%; animation-delay: 2s;"></div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("""
         <div class="message-card">
             <h3 class="card-title">The Language of Us</h3>
             <p style="font-size: 1.1rem; line-height: 1.8;">
-                Because you let me be free. You answer me whenever, never pressure me, 
-                and never judge. Our talks, the gossip, the laughter we share in that chat— 
-                honestly, it's the best part of my day. 
+                Honestly, I swear talking to you is my main source of dopamine. 
+                I love how I can just be 100% myself around you—no filter, no pressure, and zero judgment. 
+                We can text whenever, talk about the most random things, gossip endlessly, 
+                and just be completely weird together. 
                 <br><br>
-                And I want to thank the company that manufactured you— 
-                I mean, Mama and Papa. They really outdid themselves with this masterpiece. 
+                Our chat is literally my safe space and my favorite part of the day. 
+                Also, big shoutout to your parents for raising such a masterpiece. 
+                Honestly, they deserve an award for bringing you into this world. 
                 <br><br>
-                <b>You're the definition of rare.</b> 💎
+                <b>You're truly one of a kind. 💎</b>
             </p>
         </div>
         """, unsafe_allow_html=True)
 
 with col2:
+    if st.button("🎁 Special Gift From Zeinah"):
+        # Falling lizards!
+        st.markdown("""
+        <div class="falling-lizard" style="left: 10%; animation-delay: 0s;">🦎</div>
+        <div class="falling-lizard" style="left: 25%; animation-delay: 0.5s;">🦎</div>
+        <div class="falling-lizard" style="left: 40%; animation-delay: 1s;">🦎</div>
+        <div class="falling-lizard" style="left: 55%; animation-delay: 1.5s;">🦎</div>
+        <div class="falling-lizard" style="left: 70%; animation-delay: 2s;">🦎</div>
+        <div class="falling-lizard" style="left: 85%; animation-delay: 2.5s;">🦎</div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="gift-scene">
+            <h3 style="font-family: Great Vibes; color: #ffd700; font-size: 1.8rem;">A Gift From Me To You</h3>
+            <br>
+            <span class="lizard-emoji">🦎</span>
+            <br><br>
+            <p style="color: #f4e4c1; font-size: 1.1rem; text-align: left; line-height: 1.8;">
+                Congratulations, your personal emotional support Gecko has officially arrived—a quiet, 
+                cold-blooded chaos entity with zero morals who spends his nights plotting society's downfall, 
+                judging your toxic decisions from the highest corner of the wall, and serving as a tactical 
+                biological weapon ready to inflict pure psychological damage on anyone who dares to annoy you... 
+                <br><br>
+                Side effect: he feeds on the fear of your enemies, stares directly into your soul at 3:00 AM, 
+                and comes with absolutely no refunds if he accidentally drops on your face while you're sleeping. 
+                <br><br>
+                <i>No lizards were harmed in the making of this gift. He volunteered for this position.</i>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+col3, col4 = st.columns(2)
+
+with col3:
     if st.button("☕ Law School Survival"):
+        st.markdown("""
+        <div class="star" style="left: 15%; animation-delay: 0.2s;"></div>
+        <div class="star" style="left: 35%; animation-delay: 0.7s;"></div>
+        <div class="star" style="left: 55%; animation-delay: 1.2s;"></div>
+        <div class="star" style="left: 75%; animation-delay: 1.7s;"></div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("""
         <div class="message-card">
             <h3 class="card-title">Caffeine & Chaos</h3>
@@ -333,95 +470,54 @@ with col2:
         </div>
         """, unsafe_allow_html=True)
 
-col3, col4 = st.columns(2)
-
-with col3:
-    if st.button("📱 Instagram vs Reality"):
+with col4:
+    if st.button("✨ Manifesting"):
+        st.markdown("""
+        <div class="star" style="left: 20%; animation-delay: 0.3s;"></div>
+        <div class="star" style="left: 40%; animation-delay: 0.8s;"></div>
+        <div class="star" style="left: 60%; animation-delay: 1.3s;"></div>
+        <div class="star" style="left: 80%; animation-delay: 1.8s;"></div>
+        """, unsafe_allow_html=True)
+        
         st.markdown("""
         <div class="message-card">
-            <h3 class="card-title">The Aesthetic Lie</h3>
-            <p style="font-size: 1.1rem; line-height: 1.8;">
-                Instagram: Golden hour, perfect angles, "casual" coffee shot<br>
-                Reality: Took 47 photos, spilled coffee on notes, 
-                screamed at the sun for being too bright.
-                <br><br>
-                <b>Still iconic though.</b> 📸✨
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-
-with col4:
-    if st.button("🎁 Special Gift From Zeinah"):
-        st.markdown("""
-        <div class="gift-scene">
-            <h3 style="font-family: Great Vibes; color: #ffd700; font-size: 1.8rem;">A Gift From Me To You</h3>
-            <br>
-            <span class="lizard-emoji">🦎</span>
-            <br><br>
-            <p style="color: #f4e4c1; font-size: 1.1rem;">
-                <b>Your very own emotional support lizard.</b><br>
-                Because every diva needs a reptile that matches her energy—<br>
-                <i>cold-blooded but loyal, and slightly terrifying to men.</i>
-            </p>
-            <br>
-            <p style="color: #d4af37; font-size: 0.9rem;">
-                *No lizards were harmed. He volunteered for this position.*
+            <h3 class="card-title">Dear Universe...</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8; font-style: italic;">
+                Here is my official order for the upcoming year:<br><br>
+                
+                A man who is pure, respectful, and emotionally mature, 
+                but with a bank account that never struggles.<br>
+                Handsome? Extremely. Charismatic? Unmatched.<br>
+                Must have his life completely together, travel the world with me spontaneously, 
+                and treat me like an absolute queen.<br><br>
+                
+                He needs to love me obsessively, text back in 0.5 seconds, 
+                and never make me question my worth.<br><br>
+                
+                Basically: if he doesn't worship the ground I walk on, 
+                he can keep scrolling. <b>Period.</b> ✨👑
             </p>
         </div>
         """, unsafe_allow_html=True)
 
 st.markdown("---")
-st.markdown('<h2 style="text-align: center; font-family: Great Vibes; color: #ffd700; font-size: 2.5rem;">The Manifest</h2>', unsafe_allow_html=True)
 
-if st.button("✨ Read The Manifest ✨", use_container_width=True):
-    st.markdown("""
-    <div class="petal" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="petal" style="left: 30%; animation-delay: 1s;"></div>
-    <div class="petal" style="left: 50%; animation-delay: 2s;"></div>
-    <div class="petal" style="left: 70%; animation-delay: 0.5s;"></div>
-    <div class="petal" style="left: 90%; animation-delay: 1.5s;"></div>
-    """, unsafe_allow_html=True)
-    
-    time.sleep(0.5)
-    
-    st.markdown("""
-    <div class="message-card" style="border-width: 2px; box-shadow: 0 0 50px rgba(212,175,55,0.3);">
-        <h3 class="card-title">For The Year Ahead</h3>
-        <p style="font-size: 1.2rem; line-height: 2; font-style: italic;">
-            Dear Universe, we're putting in our order early:<br><br>
-            
-            A man so pure he makes holy water look suspicious.<br>
-            Religious, respectful, and rich in both character and bank account.<br>
-            Muscles? Yes. Charisma? Absolutely.<br>
-            Cadillac in the driveway, villa with a view, private jet for spontaneous trips.<br><br>
-            
-            He should love obsessively, never cheat, and look at her<br>
-            like she invented oxygen.<br>
-            Basically: if he doesn't worship the ground she walks on,<br>
-            he can keep walking. <b>Period.</b><br><br>
-            
-            P.S. He must also pass the lizard inspection.<br>
-            If the lizard doesn't approve, we don't approve. 🦎👑
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.markdown("---")
-
+# Secret Vault - Images inside only when unlocked
 st.markdown("""
 <div class="vault-box">
     <h2 class="vault-title">🔐 The Secret Vault</h2>
-    <p style="color: #f4e4c1; font-family: Cormorant Garamond;">Enter the sacred initials...</p>
+    <p style="color: #f4e4c1; font-family: Cormorant Garamond;">Guess the code...</p>
 </div>
 """, unsafe_allow_html=True)
 
-password = st.text_input("Vault Code:", type="password", placeholder="Two letters, one legend...", label_visibility="collapsed")
+password = st.text_input("Vault Code:", type="password", placeholder="????", label_visibility="collapsed")
 
 if password:
     if password == "G.I":
         st.success("🔓 Access Granted")
         time.sleep(1)
         
+        # Message first
         st.markdown("""
         <div class="vault-box" style="border-color: #ffd700; box-shadow: 0 0 50px rgba(255,215,0,0.3);">
             <h2 style="font-family: Great Vibes; color: #ffd700; font-size: 2rem;">
@@ -441,16 +537,30 @@ if password:
         </div>
         """, unsafe_allow_html=True)
         
+        # THEN the images
         st.markdown("""
-        <div class="petal" style="left: 15%; animation-delay: 0s;"></div>
-        <div class="petal" style="left: 35%; animation-delay: 0.5s;"></div>
-        <div class="petal" style="left: 55%; animation-delay: 1s;"></div>
-        <div class="petal" style="left: 75%; animation-delay: 1.5s;"></div>
-        <div class="petal" style="left: 90%; animation-delay: 2s;"></div>
+        <div class="image-container">
+            <img src="https://raw.githubusercontent.com/zeinahh949-ship-it/Sanah/main/IMG_5156.jpeg" class="vault-image" width="300">
+            <img src="https://raw.githubusercontent.com/zeinahh949-ship-it/Sanah/main/IMG_5157.jpeg" class="vault-image" width="300">
+            <img src="https://raw.githubusercontent.com/zeinahh949-ship-it/Sanah/main/IMG_5158.jpeg" class="vault-image" width="300">
+        </div>
+        
+        <p style="text-align: center; color: #d4af37; font-family: Cormorant Garamond; font-style: italic; margin-top: 2rem;">
+            The exact specifications we discussed... 👀💪
+        </p>
+        """, unsafe_allow_html=True)
+        
+        # Stars celebration
+        st.markdown("""
+        <div class="star" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="star" style="left: 30%; animation-delay: 0.3s;"></div>
+        <div class="star" style="left: 50%; animation-delay: 0.6s;"></div>
+        <div class="star" style="left: 70%; animation-delay: 0.9s;"></div>
+        <div class="star" style="left: 90%; animation-delay: 1.2s;"></div>
         """, unsafe_allow_html=True)
         
     else:
-        st.error("❌ Wrong code. The lizard is disappointed in you.")
+        st.error("❌ Wrong code. Try again.")
 
 st.markdown("""
 <p style="text-align: center; color: rgba(212,175,55,0.6); margin-top: 3rem; font-family: Cormorant Garamond; letter-spacing: 3px;">
