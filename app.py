@@ -271,6 +271,7 @@ st.markdown("""
         pointer-events: none;
         animation: star-fall 3s linear infinite;
         box-shadow: 0 0 10px #ffd700;
+        z-index: 9999;
     }
     
     @keyframes star-fall {
@@ -280,15 +281,16 @@ st.markdown("""
     
     .falling-lizard {
         position: fixed;
-        font-size: 2rem;
+        font-size: 2.5rem;
         pointer-events: none;
-        animation: lizard-fall 4s linear infinite;
-        z-index: 1000;
+        animation: lizard-fall 3s linear infinite;
+        z-index: 9999;
+        top: -50px;
     }
     
     @keyframes lizard-fall {
         0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
     
     .vault-image {
@@ -314,6 +316,15 @@ st.markdown("""
         text-align: center;
         margin: 1rem 0;
     }
+    
+    .blow-text {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.2rem;
+        color: #d4af37;
+        text-align: center;
+        margin: 1rem 0;
+        font-style: italic;
+    }
 </style>
 
 <div class="gold-dust" style="left: 15%; animation-delay: 0s;"></div>
@@ -323,29 +334,18 @@ st.markdown("""
 <div class="gold-dust" style="left: 90%; animation-delay: 3s;"></div>
 """, unsafe_allow_html=True)
 
-# Countdown for candles
+# Initialize session state
 if 'candles_lit' not in st.session_state:
     st.session_state.candles_lit = True
-
-if st.session_state.candles_lit:
-    st.markdown('<p class="countdown-text">🕯️ Blowing the candles...</p>', unsafe_allow_html=True)
-    
-    # Countdown 3, 2, 1
-    countdown_placeholder = st.empty()
-    for i in range(3, 0, -1):
-        countdown_placeholder.markdown(f'<h1 style="text-align: center; font-size: 4rem; color: #ffd700; font-family: Great Vibes;">{i}</h1>', unsafe_allow_html=True)
-        time.sleep(1)
-    
-    countdown_placeholder.empty()
-    st.session_state.candles_lit = False
-    st.rerun()
+if 'countdown_done' not in st.session_state:
+    st.session_state.countdown_done = False
 
 st.markdown('<h1 class="diva-title">Diva Turns 22</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">✨ Sanah • The Original Diva • Est. 2004 ✨</p>', unsafe_allow_html=True)
 
-# Cake with candles out if countdown finished
-candle_class = "candle" if st.session_state.candles_lit else "candle out"
-flame_html = '<div class="flame"></div>' if st.session_state.candles_lit else '<div class="smoke"></div>'
+# Show cake FIRST with lit candles
+candle_class = "candle"
+flame_html = '<div class="flame"></div>'
 
 st.markdown(f"""
 <div class="cake-scene">
@@ -369,6 +369,45 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+# THEN show countdown and blow candles
+if st.session_state.candles_lit and not st.session_state.countdown_done:
+    st.markdown('<p class="blow-text">🕯️ Blowing the candles...</p>', unsafe_allow_html=True)
+    
+    countdown_placeholder = st.empty()
+    for i in range(3, 0, -1):
+        countdown_placeholder.markdown(f'<h1 style="text-align: center; font-size: 4rem; color: #ffd700; font-family: Great Vibes;">{i}</h1>', unsafe_allow_html=True)
+        time.sleep(1)
+    
+    countdown_placeholder.empty()
+    st.session_state.candles_lit = False
+    st.session_state.countdown_done = True
+    st.rerun()
+
+# Show cake with candles OUT after countdown
+if not st.session_state.candles_lit:
+    st.markdown(f"""
+    <div class="cake-scene">
+        <div class="cake-layer layer-bottom">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-middle">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-top">
+            <div class="frosting"></div>
+        </div>
+        <div class="age-number">22</div>
+        <div class="candle-group">
+            <div class="candle out"><div class="smoke"></div></div>
+            <div class="candle out"><div class="smoke"></div></div>
+            <div class="candle out"><div class="smoke"></div></div>
+            <div class="candle out"><div class="smoke"></div></div>
+            <div class="candle out"><div class="smoke"></div></div>
+        </div>
+    </div>
+    <p style="text-align: center; color: #d4af37; font-family: Cormorant Garamond; font-style: italic;">✨ Make a wish... ✨</p>
+    """, unsafe_allow_html=True)
+
 st.markdown("---")
 
 st.markdown('<h2 style="text-align: center; font-family: Great Vibes; color: #ffd700; font-size: 2.5rem;">About The Diva</h2>', unsafe_allow_html=True)
@@ -388,7 +427,6 @@ col1, col2 = st.columns(2)
 
 with col1:
     if st.button("💎 Why You're My Unbiological Sister"):
-        # Star rain
         st.markdown("""
         <div class="star" style="left: 10%; animation-delay: 0s;"></div>
         <div class="star" style="left: 30%; animation-delay: 0.5s;"></div>
@@ -417,15 +455,14 @@ with col1:
 
 with col2:
     if st.button("🎁 Special Gift From Zeinah"):
-        # Falling lizards!
-        st.markdown("""
-        <div class="falling-lizard" style="left: 10%; animation-delay: 0s;">🦎</div>
-        <div class="falling-lizard" style="left: 25%; animation-delay: 0.5s;">🦎</div>
-        <div class="falling-lizard" style="left: 40%; animation-delay: 1s;">🦎</div>
-        <div class="falling-lizard" style="left: 55%; animation-delay: 1.5s;">🦎</div>
-        <div class="falling-lizard" style="left: 70%; animation-delay: 2s;">🦎</div>
-        <div class="falling-lizard" style="left: 85%; animation-delay: 2.5s;">🦎</div>
-        """, unsafe_allow_html=True)
+        # Lizard rain - fixed with more lizards and better positioning
+        lizard_html = ""
+        for i in range(15):
+            left = 5 + (i * 6)
+            delay = i * 0.2
+            lizard_html += f'<div class="falling-lizard" style="left: {left}%; animation-delay: {delay}s;">🦎</div>'
+        
+        st.markdown(lizard_html, unsafe_allow_html=True)
         
         st.markdown("""
         <div class="gift-scene">
@@ -462,8 +499,9 @@ with col3:
         <div class="message-card">
             <h3 class="card-title">Caffeine & Chaos</h3>
             <p style="font-size: 1.1rem; line-height: 1.8;">
-                Surviving on espresso and sheer willpower. 
-                We don't memorize cases, we download them directly into our souls at 3 AM. 
+                Months of law school chaos summarized in endless all-nighters. 
+                We don't read books on time, we telepathically download months of missed lectures 
+                right before the exam. 
                 <br><br>
                 <b>Is this legal? Absolutely not. Do we care? Also no.</b> ☕⚖️
             </p>
@@ -502,7 +540,7 @@ with col4:
 
 st.markdown("---")
 
-# Secret Vault - Images inside only when unlocked
+# Secret Vault
 st.markdown("""
 <div class="vault-box">
     <h2 class="vault-title">🔐 The Secret Vault</h2>
@@ -517,7 +555,6 @@ if password:
         st.success("🔓 Access Granted")
         time.sleep(1)
         
-        # Message first
         st.markdown("""
         <div class="vault-box" style="border-color: #ffd700; box-shadow: 0 0 50px rgba(255,215,0,0.3);">
             <h2 style="font-family: Great Vibes; color: #ffd700; font-size: 2rem;">
@@ -537,7 +574,7 @@ if password:
         </div>
         """, unsafe_allow_html=True)
         
-        # THEN the images
+        # Images
         st.markdown("""
         <div class="image-container">
             <img src="https://raw.githubusercontent.com/zeinahh949-ship-it/Sanah/main/IMG_5156.jpeg" class="vault-image" width="300">
@@ -550,7 +587,6 @@ if password:
         </p>
         """, unsafe_allow_html=True)
         
-        # Stars celebration
         st.markdown("""
         <div class="star" style="left: 10%; animation-delay: 0s;"></div>
         <div class="star" style="left: 30%; animation-delay: 0.3s;"></div>
