@@ -138,7 +138,7 @@ st.markdown("""
         border-radius: 50% 50% 30% 30%;
         animation: flicker 0.4s infinite alternate;
         box-shadow: 0 0 10px rgba(255,215,0,0.8);
-        transition: opacity 0.5s;
+        transition: opacity 0.5s, height 0.5s;
     }
     
     @keyframes flicker {
@@ -146,12 +146,14 @@ st.markdown("""
         100% { transform: translateX(-50%) scale(1.1) rotate(2deg); }
     }
     
-    .candle.out {
+    /* Class for extinguished candles */
+    .candle.extinguished {
         background: linear-gradient(90deg, #555, #777, #555);
     }
     
-    .candle.out .flame {
+    .candle.extinguished .flame {
         opacity: 0;
+        height: 0;
         animation: none;
     }
     
@@ -165,6 +167,7 @@ st.markdown("""
         background: linear-gradient(to top, rgba(200,200,200,0.5), transparent);
         border-radius: 50%;
         animation: smoke-rise 2s ease-out forwards;
+        opacity: 0;
     }
     
     @keyframes smoke-rise {
@@ -309,21 +312,36 @@ st.markdown("""
         margin: 2rem 0;
     }
     
-    .countdown-text {
+    .countdown-number {
         font-family: 'Great Vibes', cursive;
-        font-size: 2rem;
+        font-size: 4rem;
         color: #ffd700;
         text-align: center;
-        margin: 1rem 0;
+        text-shadow: 0 0 30px rgba(255,215,0,0.8);
     }
     
     .blow-text {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.3rem;
+        color: #d4af37;
+        text-align: center;
+        margin: 1rem 0;
+        font-style: italic;
+    }
+    
+    .wish-text {
         font-family: 'Cormorant Garamond', serif;
         font-size: 1.2rem;
         color: #d4af37;
         text-align: center;
         margin: 1rem 0;
         font-style: italic;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+    
+    .wish-text.show {
+        opacity: 1;
     }
 </style>
 
@@ -335,58 +353,17 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Initialize session state
-if 'candles_lit' not in st.session_state:
-    st.session_state.candles_lit = True
-if 'countdown_done' not in st.session_state:
-    st.session_state.countdown_done = False
+if 'candles_state' not in st.session_state:
+    st.session_state.candles_state = 'lit'  # lit, counting, out
 
 st.markdown('<h1 class="diva-title">Diva Turns 22</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">✨ Sanah • The Original Diva • Est. 2004 ✨</p>', unsafe_allow_html=True)
 
-# Show cake FIRST with lit candles
-candle_class = "candle"
-flame_html = '<div class="flame"></div>'
-
-st.markdown(f"""
-<div class="cake-scene">
-    <div class="cake-layer layer-bottom">
-        <div class="frosting"></div>
-    </div>
-    <div class="cake-layer layer-middle">
-        <div class="frosting"></div>
-    </div>
-    <div class="cake-layer layer-top">
-        <div class="frosting"></div>
-    </div>
-    <div class="age-number">22</div>
-    <div class="candle-group">
-        <div class="{candle_class}">{flame_html}</div>
-        <div class="{candle_class}">{flame_html}</div>
-        <div class="{candle_class}">{flame_html}</div>
-        <div class="{candle_class}">{flame_html}</div>
-        <div class="{candle_class}">{flame_html}</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# THEN show countdown and blow candles
-if st.session_state.candles_lit and not st.session_state.countdown_done:
-    st.markdown('<p class="blow-text">🕯️ Blowing the candles...</p>', unsafe_allow_html=True)
-    
-    countdown_placeholder = st.empty()
-    for i in range(3, 0, -1):
-        countdown_placeholder.markdown(f'<h1 style="text-align: center; font-size: 4rem; color: #ffd700; font-family: Great Vibes;">{i}</h1>', unsafe_allow_html=True)
-        time.sleep(1)
-    
-    countdown_placeholder.empty()
-    st.session_state.candles_lit = False
-    st.session_state.countdown_done = True
-    st.rerun()
-
-# Show cake with candles OUT after countdown
-if not st.session_state.candles_lit:
-    st.markdown(f"""
-    <div class="cake-scene">
+# SINGLE CAKE - changes based on state
+if st.session_state.candles_state == 'lit':
+    # Cake with lit candles
+    st.markdown("""
+    <div class="cake-scene" id="cake-scene">
         <div class="cake-layer layer-bottom">
             <div class="frosting"></div>
         </div>
@@ -398,14 +375,82 @@ if not st.session_state.candles_lit:
         </div>
         <div class="age-number">22</div>
         <div class="candle-group">
-            <div class="candle out"><div class="smoke"></div></div>
-            <div class="candle out"><div class="smoke"></div></div>
-            <div class="candle out"><div class="smoke"></div></div>
-            <div class="candle out"><div class="smoke"></div></div>
-            <div class="candle out"><div class="smoke"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
         </div>
     </div>
-    <p style="text-align: center; color: #d4af37; font-family: Cormorant Garamond; font-style: italic;">✨ Make a wish... ✨</p>
+    """, unsafe_allow_html=True)
+    
+    # Button to start countdown
+    if st.button("🕯️ Blow The Candles", use_container_width=True):
+        st.session_state.candles_state = 'counting'
+        st.rerun()
+
+elif st.session_state.candles_state == 'counting':
+    # Show countdown text
+    st.markdown('<p class="blow-text">Blowing the candles...</p>', unsafe_allow_html=True)
+    
+    # Countdown placeholder
+    countdown_placeholder = st.empty()
+    
+    # Show cake with candles still lit during countdown
+    st.markdown("""
+    <div class="cake-scene" id="cake-scene">
+        <div class="cake-layer layer-bottom">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-middle">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-top">
+            <div class="frosting"></div>
+        </div>
+        <div class="age-number">22</div>
+        <div class="candle-group">
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+            <div class="candle"><div class="flame"></div></div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Countdown 3, 2, 1
+    for i in range(3, 0, -1):
+        countdown_placeholder.markdown(f'<h1 class="countdown-number">{i}</h1>', unsafe_allow_html=True)
+        time.sleep(1)
+    
+    countdown_placeholder.empty()
+    st.session_state.candles_state = 'out'
+    st.rerun()
+
+else:  # candles_state == 'out'
+    # Cake with extinguished candles and smoke
+    st.markdown("""
+    <div class="cake-scene" id="cake-scene">
+        <div class="cake-layer layer-bottom">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-middle">
+            <div class="frosting"></div>
+        </div>
+        <div class="cake-layer layer-top">
+            <div class="frosting"></div>
+        </div>
+        <div class="age-number">22</div>
+        <div class="candle-group">
+            <div class="candle extinguished"><div class="smoke" style="animation-delay: 0s;"></div></div>
+            <div class="candle extinguished"><div class="smoke" style="animation-delay: 0.2s;"></div></div>
+            <div class="candle extinguished"><div class="smoke" style="animation-delay: 0.4s;"></div></div>
+            <div class="candle extinguished"><div class="smoke" style="animation-delay: 0.6s;"></div></div>
+            <div class="candle extinguished"><div class="smoke" style="animation-delay: 0.8s;"></div></div>
+        </div>
+    </div>
+    <p class="wish-text show">✨ Make a wish... ✨</p>
     """, unsafe_allow_html=True)
 
 st.markdown("---")
@@ -455,7 +500,7 @@ with col1:
 
 with col2:
     if st.button("🎁 Special Gift From Zeinah"):
-        # Lizard rain - fixed with more lizards and better positioning
+        # Lizard rain
         lizard_html = ""
         for i in range(15):
             left = 5 + (i * 6)
